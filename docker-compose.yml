@@ -1,0 +1,31 @@
+version: '3'
+services:
+  user:
+    build:
+      dockerfile: Dockerfile
+      context: ./user-service
+    volumes:
+      - /app/node_modules
+      - ./user-service:/app
+  post:
+    build:
+      dockerfile: Dockerfile
+      context: ./post-service
+    volumes:
+      - /app/node_modules
+      - ./post-service:/app
+  gateway:
+    build:
+      dockerfile: Dockerfile
+      context: ./gateway
+    volumes:
+      - /app/node_modules
+      - ./gateway:/app
+    environment:
+      - USER_HOST=http://user:3000
+      - POST_HOST=http://post:3001
+    ports:
+      - 3002:3002
+    links:
+      - user
+      - post
